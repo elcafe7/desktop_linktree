@@ -1,5 +1,5 @@
 # desktop_linktree
-A flat, self-updating htmllinktree meant for use on your desktop, editable from your browser.
+A flat, self-updating html linktree meant for use on your desktop, editable from your browser.
 
 This app uses CSS, HTML, and Javascript.
 
