@@ -5,6 +5,13 @@ This app uses CSS, HTML, and Javascript.
 
 ## (Screenshots)
 
+
+
+
+
+
+
+
 ### Main page
 <img width="754" height="441" alt="main" src="https://github.com/user-attachments/assets/d125db27-52cc-4b0a-aa04-3300e3887e2b" />
 
