@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">My Linktree</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            background: #d1d1d1;
+            color: #333;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .link a {
+            color: #333;
+            text-decoration: none;
+            flex: 1;
+            text-align: left;
+        }
+        .link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        .wrench {
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .link:hover .wrench {
+            opacity: 1;
+        }
+        .wrench:hover {
+            opacity: 1;
+            color: #000 !important;
+        }
+        .add-form {
+            margin-top: 20px;
+            border-radius: 15px;
+            background: #f5f5f5;
+            transition: all 0.3s ease;
+        }
+        .add-form.collapsed {
+            border: none;
+        }
+        .add-form.expanded {
+            border: 1px solid #ccc;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .add-toggle {
+            width: 100%;
+            padding: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 400;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+        .add-toggle:hover {
+            color: #333;
+        }
+        .add-content {
+            padding: 20px;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+            border-top: 1px solid #ddd;
+        }
+        .add-form.expanded .add-content {
+            display: block;
+        }
+        .add-content input {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .add-content button {
+            width: 100%;
+            padding: 12px;
+            background: #b0b0b0;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .add-content button:hover {
+            background: #999;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .edit-form, .title-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f5f5f5;
+        }
+        .edit-form input, .title-form input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .edit-form button, .title-form button {
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            color: white;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .edit-form .save-btn, .title-form .save-btn {
+            background: #b0b0b0;
+        }
+        .edit-form .save-btn:hover, .title-form .save-btn:hover {
+            background: #999;
+        }
+        .edit-form .delete-btn {
+            background: #999;
+        }
+        .edit-form .delete-btn:hover {
+            background: #7a7a7a;
+        }
+        .edit-form .cancel-btn, .title-form .cancel-btn {
+            background: #6c757d;
+        }
+        .edit-form .cancel-btn:hover, .title-form .cancel-btn:hover {
+            background: #545b62;
+        }
+        .edit-row {
+            display: flex;
+            gap: 10px;
+        }
+        .title-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .button-row {
+            display: flex;
+            gap: 10px;
+        }
+        .error-message {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .static-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+            text-align: center;
+        }
+        .static-link a {
+            color: #333;
+            text-decoration: none;
+        }
+        .static-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span id="title-text">My Links</span>
+            <span class="wrench" onclick="editTitle()">⚙</span>
+        </h1>
+        <div id="links"></div>
+        <div class="add-form collapsed" id="add-form">
+            <button class="add-toggle" onclick="toggleAddForm()">
+                <span id="add-icon">+</span>
+                <span>Add New Link</span>
+            </button>
+            <div class="add-content">
+                <input type="text" id="desc" placeholder="Link description">
+                <input type="url" id="url" placeholder="Link URL (e.g., google.com or https://example.com)">
+                <div id="add-error" class="error-message" style="display: none;"></div>
+                <button onclick="addLink()">Add Link</button>
+            </div>
+        </div>
+        <div class="static-link">
+            <a href="#" onclick="generateStaticLinktree()">Generate Static Linktree</a>
+        </div>
+    </div>
+    <script>
+        let links = [];
+        let pageTitle = 'My Links';
+        function initApp() {
+            try {
+                const storedLinks = localStorage.getItem('links');
+                const storedTitle = localStorage.getItem('pageTitle');
+                if (storedLinks) {
+                    links = JSON.parse(storedLinks);
+                    if (!Array.isArray(links)) {
+                        links = [];
+                    }
+                }
+                if (storedTitle) {
+                    pageTitle = storedTitle;
+                }
+            } catch (error) {
+                console.error('Error loading from localStorage:', error);
+                links = [];
+                pageTitle = 'My Links';
+            }
+            updateTitle(pageTitle);
+            renderLinks();
+        }
+        function normalizeUrl(url) {
+            if (!/^https?:\/\//i.test(url)) {
+                return 'https://' + url;
+            }
+            return url;
+        }
+        function isValidUrl(string) {
+            try {
+                const normalizedUrl = normalizeUrl(string);
+                const url = new URL(normalizedUrl);
+                return url.protocol === 'http:' || url.protocol === 'https:';
+            } catch (_) {
+                return false;
+            }
+        }
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 3000);
+        }
+        function updateTitle(newTitle) {
+            if (newTitle && newTitle.trim()) {
+                pageTitle = newTitle.trim();
+                try {
+                    localStorage.setItem('pageTitle', pageTitle);
+                } catch (error) {
+                    console.error('Error saving title to localStorage:', error);
+                }
+                const titleElement = document.getElementById('title-text');
+                const pageTitleElement = document.getElementById('page-title');
+                if (titleElement) {
+                    titleElement.textContent = pageTitle;
+                }
+                if (pageTitleElement) {
+                    pageTitleElement.textContent = pageTitle;
+                }
+            }
+        }
+        function editTitle() {
+            const titleContainer = document.querySelector('h1');
+            titleContainer.innerHTML = '';
+            const form = document.createElement('div');
+            form.className = 'title-form';
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'title-input';
+            input.value = pageTitle;
+            input.placeholder = 'Enter title';
+            const saveBtn = document.createElement('button');
+            saveBtn.className = 'save-btn';
+            saveBtn.textContent = 'Save';
+            saveBtn.onclick = () => {
+                const newTitle = input.value.trim();
+                if (newTitle) {
+                    pageTitle = newTitle;
+                    try {
+                        localStorage.setItem('pageTitle', pageTitle);
+                    } catch (error) {
+                        console.error('Error saving title to localStorage:', error);
+                    }
+                    document.getElementById('page-title').textContent = pageTitle;
+                    renderTitle();
+                } else {
+                    input.focus();
+                }
+            };
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'cancel-btn';
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.onclick = renderTitle;
+            const buttonRow = document.createElement('div');
+            buttonRow.className = 'button-row';
+            buttonRow.appendChild(saveBtn);
+            buttonRow.appendChild(cancelBtn);
+            form.appendChild(input);
+            form.appendChild(buttonRow);
+            titleContainer.appendChild(form);
+            input.focus();
+            input.select();
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    saveBtn.click();
+                }
+            });
+        }
+        function renderTitle() {
+            const titleContainer = document.querySelector('h1');
+            titleContainer.innerHTML = `
+                <span id="title-text">${pageTitle}</span>
+                <span class="wrench" onclick="editTitle()">⚙</span>
+            `;
+        }
+        function toggleAddForm() {
+            const form = document.getElementById('add-form');
+            const icon = document.getElementById('add-icon');
+            if (form.classList.contains('collapsed')) {
+                form.classList.remove('collapsed');
+                form.classList.add('expanded');
+                icon.textContent = '−';
+                setTimeout(() => {
+                    document.getElementById('desc').focus();
+                }, 100);
+            } else {
+                form.classList.remove('expanded');
+                form.classList.add('collapsed');
+                icon.textContent = '+';
+                document.getElementById('desc').value = '';
+                document.getElementById('url').value = '';
+                document.getElementById('add-error').style.display = 'none';
+            }
+        }
+        function renderLinks() {
+            const container = document.getElementById('links');
+            container.innerHTML = '';
+            if (!Array.isArray(links)) {
+                links = [];
+                return;
+            }
+            links.forEach((link, index) => {
+                if (!link || !link.desc || !link.url) {
+                    return;
+                }
+                const div = document.createElement('div');
+                div.className = 'link';
+                const a = document.createElement('a');
+                a.href = link.url;
+                a.textContent = link.desc;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                const wrench = document.createElement('span');
+                wrench.className = 'wrench';
+                wrench.innerHTML = '⚙';
+                wrench.onclick = () => editLink(index);
+                div.appendChild(a);
+                div.appendChild(wrench);
+                container.appendChild(div);
+            });
+        }
+        function addLink() {
+            const desc = document.getElementById('desc').value.trim();
+            let url = document.getElementById('url').value.trim();
+            if (!desc) {
+                showError('add-error', 'Please enter a description');
+                document.getElementById('desc').focus();
+                return;
+            }
+            if (!url) {
+                showError('add-error', 'Please enter a URL');
+                document.getElementById('url').focus();
+                return;
+            }
+            url = normalizeUrl(url);
+            if (!isValidUrl(url)) {
+                showError('add-error', 'Please enter a valid URL');
+                document.getElementById('url').focus();
+                return;
+            }
+            try {
+                links.push({ desc, url });
+                localStorage.setItem('links', JSON.stringify(links));
+                document.getElementById('desc').value = '';
+                document.getElementById('url').value = '';
+                document.getElementById('add-error').style.display = 'none';
+                renderLinks();
+                toggleAddForm();
+            } catch (error) {
+                console.error('Error saving links to localStorage:', error);
+                showError('add-error', 'Error saving link. Please try again.');
+            }
+        }
+        function editLink(index) {
+            if (!links[index]) {
+                renderLinks();
+                return;
+            }
+            const container = document.getElementById('links');
+            const linkDiv = container.children[index];
+            const link = links[index];
+            linkDiv.innerHTML = '';
+            const form = document.createElement('div');
+            form.className = 'edit-form';
+            const descInput = document.createElement('input');
+            descInput.type = 'text';
+            descInput.value = link.desc;
+            descInput.placeholder = 'Description';
+            const urlInput = document.createElement('input');
+            urlInput.type = 'url';
+            urlInput.value = link.url;
+            urlInput.placeholder = 'URL';
+            const saveBtn = document.createElement('button');
+            saveBtn.className = 'save-btn';
+            saveBtn.textContent = 'Save';
+            saveBtn.onclick = () => {
+                const newDesc = descInput.value.trim();
+                let newUrl = urlInput.value.trim();
+                if (!newDesc) {
+                    descInput.focus();
+                    return;
+                }
+                if (!newUrl) {
+                    urlInput.focus();
+                    return;
+                }
+                newUrl = normalizeUrl(newUrl);
+                if (!isValidUrl(newUrl)) {
+                    alert('Please enter a valid URL');
+                    urlInput.focus();
+                    return;
+                }
+                try {
+                    links[index] = { desc: newDesc, url: newUrl };
+                    localStorage.setItem('links', JSON.stringify(links));
+                    renderLinks();
+                } catch (error) {
+                    console.error('Error saving links to localStorage:', error);
+                    alert('Error saving link. Please try again.');
+                }
+            };
+            const delInput = document.createElement('input');
+            delInput.type = 'text';
+            delInput.placeholder = 'Type "delete" to confirm';
+            const delBtn = document.createElement('button');
+            delBtn.className = 'delete-btn';
+            delBtn.textContent = 'Delete';
+            delBtn.onclick = () => {
+                if (delInput.value.trim().toLowerCase() === 'delete') {
+                    try {
+                        links.splice(index, 1);
+                        localStorage.setItem('links', JSON.stringify(links));
+                        renderLinks();
+                    } catch (error) {
+                        console.error('Error saving links to localStorage:', error);
+                        alert('Error deleting link. Please try again.');
+                    }
+                } else {
+                    alert('Type "delete" exactly to confirm deletion.');
+                    delInput.value = '';
+                    delInput.focus();
+                }
+            };
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'cancel-btn';
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.onclick = () => renderLinks();
+            form.appendChild(descInput);
+            form.appendChild(urlInput);
+            const buttonRow = document.createElement('div');
+            buttonRow.className = 'button-row';
+            buttonRow.appendChild(saveBtn);
+            buttonRow.appendChild(cancelBtn);
+            form.appendChild(buttonRow);
+            const deleteRow = document.createElement('div');
+            deleteRow.className = 'edit-row';
+            deleteRow.appendChild(delInput);
+            deleteRow.appendChild(delBtn);
+            form.appendChild(deleteRow);
+            linkDiv.appendChild(form);
+            descInput.focus();
+            descInput.select();
+        }
+        function generateStaticLinktree() {
+            const staticHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${pageTitle}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        .link {
+            display: block;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            background: #d1d1d1;
+            color: #333;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>${pageTitle}</h1>
+        <div id="links">
+            ${links.map(link => `<a class="link" href="${link.url}" target="_blank" rel="noopener noreferrer">${link.desc}</a>`).join('')}
+        </div>
+    </div>
+</body>
+</html>
+            `;
+            const blob = new Blob([staticHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'static-linktree.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            document.getElementById('url').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addLink();
+                }
+            });
+            document.getElementById('desc').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('url').focus();
+                }
+            });
+        });
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const target = e.target;
+                if (target.classList.contains('title-input')) {
+                    const saveBtn = target.parentElement.querySelector('.save-btn');
+                    if (saveBtn) saveBtn.click();
+                    return;
+                }
+                if (target.closest('.edit-form')) {
+                    const form = target.closest('.edit-form');
+                    if (target.placeholder === 'Type "delete" to confirm') {
+                        const deleteBtn = form.querySelector('.delete-btn');
+                        if (deleteBtn) deleteBtn.click();
+                        return;
+                    }
+                    if (target.placeholder === 'Description' || target.placeholder === 'URL') {
+                        const saveBtn = form.querySelector('.save-btn');
+                        if (saveBtn) saveBtn.click();
+                        return;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
